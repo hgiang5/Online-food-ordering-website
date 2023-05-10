@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+        <!-- My CSS -->
+        <link rel="stylesheet" href="{% static 'orders/styles.css' %}"/>
+        <link rel="shortcut icon" type="image/png" href="{% static 'orders/favicon.ico' %}"/>
+        <!-- first jQuery, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+        <!-- Fontawesome  -->
+        <script src="https://kit.fontawesome.com/ae98612b4c.js" crossorigin="anonymous"></script>
+
+        <title> Dinosaur's Pizza - {% block title %} {% endblock %} </title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container-fluid">                
+                <a class="navbar-brand" href="/">
+                    <img src="/static/orders/pickle-cute.gif" alt="" height="70px">                    
+                    Dinosaur's pizza <br>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="navbar-toggler-icon"></span>                                         
+                </button>                  
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link"> Home </a></li>
+                        <li class="nav-item"><a href="{% url 'index' %}" class="nav-link"> Menu </a></li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav mr-auto">
+                        {% if user.is_superuser or user.is_staff %} 
+                        <li class="nav-item"><a href="{% url 'allorders' %}" class="nav-link"> All Orders </a></li>
+                        {% endif %}                       
+                    </ul>
+                    <ul class="navbar-nav ml-auto">                                            
+                        <a class="nav-link active" href="{% url 'cart' %}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart </a>
+                        <li class="nav-item"><a href="{% url 'myorders' %}" class="nav-link"> My Orders </a></li>
+                        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout </a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a href="{% url 'register' %}" class="nav-link"><i class="fas fa-user-plus" aria-hidden="true"></i> Register </a></li>
+                        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login </a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="container pt-3 text-center">
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                </div>
+                
+            {% endfor %}
+        {% endif %}
+        
+
+        
+        <main>
+            {% block content %} {% endblock %}
+        </main>
+
+        
+    </body>
+</html>

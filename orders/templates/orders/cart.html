@@ -1,0 +1,52 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block content %}
+
+<div class="container pt-5">
+    {% if orders %}
+    <table class="table table-hover table-light">
+        <thead class="thead-dark">
+            <tr>
+                <th>S.No.</th>
+                <th>Dish</th>
+                <th>Name</th>
+                <th>Remarks</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ order.dishtype }}</td>
+                <td>{{ order.dishname }}</td>
+                <td>{{ order.remarks }}</td>
+                <td>${{ order.price }}</td>
+                <td>
+                    <form action="{% url 'delete' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ order.id }}" name="order">
+                        <button type="submit" class="btn btn-danger"> Remove </button>                         
+                    </form>                
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h5 class="text-white pt-3 mb-3 text-right"> Total Price: ${{ total_price }}</h5>
+    <form action="{% url 'checkout' %}", method="POST">
+        {% csrf_token %}
+        <button class="btn btn-primary float-right"> Place Order </button>
+    </form>
+    {% else %}
+    <h2 class="text-white"> Your Cart is empty.</h2>
+    <h5 class="text-white ml-4"> Go to <a href="{% url 'index' %}"> menu </a> to add items.</h5>
+    {% endif %}
+</div>
+
+{% endblock %}
